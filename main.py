@@ -1,10 +1,18 @@
 from lexer import Lexer
+from parser import Parser
 
 with open("tests/example.pocl") as file:
     code = file.read()
 
 lexer = Lexer(code)
-tokens = lexer.lex()
+lexer.lex()
 
-for token in tokens:
-    print(token)
+print("Tokens:")
+for token in lexer.tokens:
+    print(f"`{token}`, ", end="")
+print()
+
+
+parser = Parser(lexer.tokens)
+parsed_output = parser.program()
+print(parsed_output)

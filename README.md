@@ -1,4 +1,4 @@
-# pocl - proof of context language
+# pocl - proof of concept language
 
 I _really_ couldn't think of a better name.
 

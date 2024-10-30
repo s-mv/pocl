@@ -1,3 +1,5 @@
+from enum import Enum
+
 """
 NOTE:
 this is a quick and dirty lexer
@@ -7,13 +9,38 @@ or using Python for this of all things I guess
 """
 
 
+class TokenType(Enum):
+    KEYWORD = 0
+    LITERAL = 1
+    IDENTIFIER = 2
+    OPERATOR = 3
+    ERROR = 4
+    UNKNOWN = 5
+
+
+class Token:
+    type: TokenType
+    value: any
+    position: int
+
+    def __init__(self, type, value, position):
+        self.type = type
+        self.value = value
+        self.position = position
+
+    def __repr__(self):
+        return self.value
+
+
 class Lexer:
     source: str
     position: int
+    tokens: list[Token]
 
     def __init__(self, source: str):
         self.source = source
         self.position = 0
+        self.tokens = []
 
     def next(self):
         if self.position >= len(self.source):
@@ -28,11 +55,11 @@ class Lexer:
         return self.source[self.position]
 
     def skip_whitespace(self):
-        while self.peek() and self.peek() in " \t":
+        while self.peek() and self.peek() in " \n\t":
             self.next()
 
     def lex(self):
-        tokens = []
+        self.tokens = []
 
         while True:
             self.skip_whitespace()
@@ -45,53 +72,53 @@ class Lexer:
                 num = char
                 while self.peek() and self.peek().isdigit():
                     num += self.next()
-                tokens.append(("NUMBER", num))
+                self.tokens.append(Token(TokenType.LITERAL, num, self.position))
 
             elif char.isalpha():
                 identifier = char
                 while self.peek() and self.peek().isalnum():
                     identifier += self.next()
                 if identifier == "print":
-                    tokens.append(("PRINT", identifier))
+                    self.tokens.append(
+                        Token(TokenType.KEYWORD, identifier, self.position)
+                    )
                 elif identifier == "for":
-                    tokens.append(("FOR", identifier))
+                    self.tokens.append(
+                        Token(TokenType.KEYWORD, identifier, self.position)
+                    )
                 else:
-                    tokens.append(("IDENTIFIER", identifier))
+                    self.tokens.append(
+                        Token(TokenType.IDENTIFIER, identifier, self.position)
+                    )
 
             elif char == "=":
-                tokens.append(("ASSIGN", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == "+":
-                tokens.append(("PLUS", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == "-":
-                tokens.append(("MINUS", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == "*":
-                tokens.append(("MULTIPLY", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == "/":
-                tokens.append(("DIVIDE", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == "{":
-                tokens.append(("LBRACE", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == "}":
-                tokens.append(("RBRACE", char))
+                self.tokens.append(Token(TokenType.OPERATOR, char, self.position))
 
             elif char == ".":
                 if self.peek() == ".":
                     self.next()
-                    tokens.append(("RANGE", ".."))
+                    self.tokens.append(Token(TokenType.OPERATOR, "..", self.position))
                 else:
                     # TODO
                     # maybe add more information?
-                    tokens.append(("ERROR", char))
-
-            elif char == "\n":
-                tokens.append(("NEWLINE", char))
-
+                    self.tokens.append(Token(TokenType.ERROR, char, self.position))
             else:
-                tokens.append(("UNKNOWN", char))
-
-        return tokens
+                self.tokens.append(Token(TokenType.UNKNOWN, char, self.position))
