@@ -4,15 +4,40 @@ But here's the basic overview anyway...
 
 ```
 program => statement*
-statement => assignment | print | loop
+
+statement => assignment 
+          | print_statement
+          | function_declaration
+          | if_statement
+          | function_call
+
 assignment => identifier '=' expression
-print => 'print' '(' expression ')'
-loop => 'for' identifier 'in' expression '..' expression '{' statement* '}'
+
+print_statement => 'print' '(' expression ')'
+
+function_declaration => 'fn' identifier '(' parameters? ')' '{' statement* '}'
+
+parameters => parameter (',' parameter)*
+
+parameter => identifier
+
+if_statement => 'if' expression '{' statement* '}' 
+
+function_call => identifier '(' arguments? ')'
+
+arguments => expression (',' expression)*
+
 expression => term (('+' | '-') term)*
+
 term => factor (('*' | '/') factor)*
-factor => number | identifier
+
+factor => number | identifier | '(' expression ')'
+
 identifier => letter (letter | digit)*
+
 number => digit+
+
 letter => [a-zA-Z]
+
 digit => [0-9]
 ```

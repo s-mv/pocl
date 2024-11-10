@@ -3,9 +3,14 @@ y = 3
 
 print(x + y)
 
-for i in 1..100 {
-    x += 100
-    y += 100
+fn stuff (x, y, i) {
+    if i {
+        x = x + 10
+        y = y + 10
+        stuff(x, y, i - 1)
+    }
 }
 
-print (x + y)
+z = stuff(x, y, 100)
+
+print(x + y)

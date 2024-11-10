@@ -1,5 +1,5 @@
 from lexer import Lexer
-from parser import Parser
+from parser import Parser, print_ast
 
 with open("tests/example.pocl") as file:
     code = file.read()
@@ -12,7 +12,6 @@ for token in lexer.tokens:
     print(f"`{token}`, ", end="")
 print()
 
-
 parser = Parser(lexer.tokens)
-parsed_output = parser.program()
-print(parsed_output)
+parser.parse()
+print_ast(parser.ast)
