@@ -11,6 +11,6 @@ fn stuff (x, y, i) {
     }
 }
 
-z = stuff(x, y, 100)
+stuff(x, y, 100)
 
 print(x + y)

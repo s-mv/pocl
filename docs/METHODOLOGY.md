@@ -3,8 +3,8 @@
 But since you're here, here's a really badly etched pipeline.
 
 ```
-         lexing           parsing         semantic analysis
-string --------> tokens ----------> AST --------------------> ??? ---> concurrent execution
+        lexing          parsing        semantic analysis(?)
+string -------> tokens --------> AST ---------------------> ??? ---> concurrent execution
 ```
 
 ## ???...?
