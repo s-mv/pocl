@@ -27,4 +27,4 @@ syscall print        # 16. Call system function print
 point 0              # 16. Reset the pointer
 
 # Possible bytecode generation decision: don't reset pointers, only set them?
-# Out of the 3 times I've set the pointer, 2 times have been redundant.
+# Out of the 5 times I've set the pointer, 1 time has been redundant.

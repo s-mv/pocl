@@ -1,7 +1,7 @@
 from lexer import Lexer
 from parser import Parser, print_ast
 
-with open("tests/example.pocl") as file:
+with open("tests/example_for.pocl") as file:
     code = file.read()
 
 lexer = Lexer(code)

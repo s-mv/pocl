@@ -88,11 +88,7 @@ class Lexer:
                     self.tokens.append(
                         Token(TokenType.KEYWORD, identifier, self.position)
                     )
-                elif identifier == "fn":
-                    self.tokens.append(
-                        Token(TokenType.KEYWORD, identifier, self.position)
-                    )
-                elif identifier == "if":
+                elif identifier in ("fn", "if", "for", "from", "to"):
                     self.tokens.append(
                         Token(TokenType.KEYWORD, identifier, self.position)
                     )

@@ -71,6 +71,14 @@ class IfStatement(Node):
 
 
 @dataclass
+class ForStatement(Node):
+    identifier: Identifier
+    start: Node
+    end: Node
+    body: List[Node]
+
+
+@dataclass
 class Program(Node):
     statements: List[Node]
 
@@ -116,12 +124,12 @@ class Parser:
     def expect(self, token_type: TokenType, value: str = None) -> Token:
         if self.match(token_type, value):
             return self.tokens[self.current - 1]
-        token = self.peek()
         # TODO, panic mode perhaps?
         # highly unneeded in my opinion
         # were it a traditional language I wouldn't even be making it in Python
         # so it seems like a waste of energy to polish the parts that don't matter
         # (at least until the crux of the project is not made)
+        token = self.peek()
         raise SyntaxError(
             f"Expected {token_type.name} {f'({value})' if value else ''}, got {token} instead!"
         )
@@ -139,6 +147,8 @@ class Parser:
                 return self.parse_function_declaration()
             elif self.peek().value == "if":
                 return self.parse_if_statement()
+            elif self.peek().value == "for":
+                return self.parse_for_statement()
             elif self.peek().value == "print":
                 return self.parse_print_statement()
 
@@ -180,6 +190,23 @@ class Parser:
 
         self.expect(TokenType.BRACE, "}")
         return IfStatement(condition, body)
+
+    def parse_for_statement(self) -> ForStatement:
+        self.expect(TokenType.KEYWORD, "for")
+        identifier = Identifier(self.expect(TokenType.IDENTIFIER).value)
+        self.expect(TokenType.KEYWORD, "from")
+        start = self.parse_expression()
+        self.expect(TokenType.KEYWORD, "to")
+        end = self.parse_expression()
+        self.expect(TokenType.BRACE, "{")
+
+        body = []
+        while self.peek() and self.peek().value != "}":
+            body.append(self.parse_statement())
+
+        self.expect(TokenType.BRACE, "}")
+
+        return ForStatement(identifier, start, end, body)
 
     def parse_print_statement(self) -> FunctionCall:
         self.expect(TokenType.KEYWORD, "print")
@@ -316,6 +343,18 @@ def print_ast(node: Node, indent: int = 0) -> None:
         print(f"{indent_str}IfStatement")
         print(f"{indent_str}  Condition:")
         print_ast(node.condition, indent + 2)
+        print(f"{indent_str}  Body:")
+        for stmt in node.body:
+            print_ast(stmt, indent + 2)
+
+    elif isinstance(node, ForStatement):
+        print(f"{indent_str}ForStatement")
+        print(f"{indent_str}  Identifier:")
+        print_ast(node.identifier, indent + 2)
+        print(f"{indent_str}  Start:")
+        print_ast(node.start, indent + 2)
+        print(f"{indent_str}  End:")
+        print_ast(node.end, indent + 2)
         print(f"{indent_str}  Body:")
         for stmt in node.body:
             print_ast(stmt, indent + 2)

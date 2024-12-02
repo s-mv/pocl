@@ -9,6 +9,7 @@ statement => assignment
           | print_statement
           | function_declaration
           | if_statement
+          | for_statement
           | function_call
 
 assignment => identifier '=' expression
@@ -22,6 +23,8 @@ parameters => parameter (',' parameter)*
 parameter => identifier
 
 if_statement => 'if' expression '{' statement* '}' 
+
+for_statement => 'for' identifier 'from' expression 'to' expression '{' statement* '}'
 
 function_call => identifier '(' arguments? ')'
 
