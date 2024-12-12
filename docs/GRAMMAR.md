@@ -37,10 +37,4 @@ term => factor (('*' | '/') factor)*
 factor => number | identifier | '(' expression ')'
 
 identifier => letter (letter | digit)*
-
-number => digit+
-
-letter => [a-zA-Z]
-
-digit => [0-9]
 ```
